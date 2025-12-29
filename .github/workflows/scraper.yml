@@ -30,7 +30,7 @@ jobs:
           python scraper.py > output.json
 
       - name: Upload JSON (for testing)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: saq-urls
           path: output.json
