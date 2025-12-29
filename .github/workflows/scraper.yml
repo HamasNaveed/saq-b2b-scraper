@@ -1,0 +1,36 @@
+name: SAQ B2B Scraper
+
+on:
+  workflow_dispatch: # allows manual trigger via webhook
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Chrome & ChromeDriver
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install selenium
+
+      - name: Run Scraper
+        env:
+          SAQ_USERNAME: ${{ secrets.SAQ_USERNAME }}
+          SAQ_PASSWORD: ${{ secrets.SAQ_PASSWORD }}
+        run: |
+          python scraper.py > output.json
+
+      - name: Upload JSON (for testing)
+        uses: actions/upload-artifact@v3
+        with:
+          name: saq-urls
+          path: output.json
